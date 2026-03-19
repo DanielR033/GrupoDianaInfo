@@ -1,0 +1,1587 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grupo Diana – Arquitecturas</title>
+
+  <!-- Mermaid (ESM) -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      flowchart: { curve: 'linear' },
+      sequence: { showSequenceNumbers: true }
+    });
+
+    function copyText(id) {
+      const el = document.getElementById(id);
+      navigator.clipboard.writeText(el.textContent);
+      const btn = document.querySelector(`[data-copy="${id}"]`);
+      if (btn) {
+        const prev = btn.textContent;
+        btn.textContent = 'Copiado ✓';
+        setTimeout(() => (btn.textContent = prev), 1200);
+      }
+    }
+
+    function openModal(id) {
+      const src = document.querySelector(`[data-diagram="${id}"]`);
+      const modal = document.getElementById('modal');
+      const body = document.getElementById('modalBody');
+      body.innerHTML = '';
+      const clone = src.cloneNode(true);
+      clone.style.margin = '0';
+      clone.classList.add('zoom');
+      body.appendChild(clone);
+      modal.showModal();
+    }
+
+    window.copyText = copyText;
+    window.openModal = openModal;
+  </script>
+
+  <style>
+    :root{
+      --bg:#0b1220; --card:#111a2e; --muted:#8aa0c2; --text:#e9f0ff;
+      --accent:#7dd3fc; --accent2:#a7f3d0; --warn:#fbbf24;
+      --border: rgba(255,255,255,.12);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text);}
+    header{padding:22px 18px 10px; border-bottom:1px solid var(--border); position:sticky; top:0; background:linear-gradient(180deg, rgba(11,18,32,.98), rgba(11,18,32,.92)); backdrop-filter: blur(10px); z-index:10}
+    h1{margin:0; font-size:18px; letter-spacing:.2px}
+    .sub{margin-top:6px; color:var(--muted); font-size:13px; line-height:1.35}
+    .wrap{max-width:1240px; margin:0 auto; padding:16px}
+
+    /* IMPORTANT: 1 columna para pantallazos grandes */
+    .grid{display:grid; grid-template-columns:1fr; gap:14px}
+
+    .card{background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden; box-shadow: 0 8px 28px rgba(0,0,0,.35)}
+    .card-h{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:14px 14px 10px; border-bottom:1px solid var(--border)}
+    .title{display:flex; flex-direction:column; gap:4px}
+    .title b{font-size:14px}
+    .title small{color:var(--muted); font-size:12px; line-height:1.35}
+
+    .actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+    .btn{appearance:none; border:1px solid var(--border); background:rgba(255,255,255,.06); color:var(--text);
+      padding:8px 10px; border-radius:10px; font-size:12px; cursor:pointer; user-select:none}
+    .btn:hover{border-color:rgba(255,255,255,.22)}
+
+    .canvas{padding:14px}
+
+    /* Caja blanca grande para que el SVG salga nítido */
+    .mermaid-wrap{background:white; border-radius:14px; padding:16px; overflow:auto}
+    .mermaid{min-width:900px;}
+
+    /* Fuerza el SVG a verse grande (sin romper el scroll) */
+    .mermaid svg{width:1200px; height:auto; display:block}
+
+    details{margin-top:10px}
+    summary{cursor:pointer; color:var(--accent); font-size:12px; user-select:none}
+    pre{margin:10px 0 0; background:rgba(0,0,0,.35); border:1px solid var(--border); border-radius:12px; padding:12px; overflow:auto; color:#e6edf3; font-size:12px; line-height:1.45}
+
+    dialog{border:none; border-radius:18px; padding:0; width:min(1400px, 96vw); background:var(--card); color:var(--text);}
+    dialog::backdrop{background:rgba(0,0,0,.65)}
+    .modal-h{display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-bottom:1px solid var(--border)}
+    .modal-b{padding:14px}
+    .modal-b .mermaid-wrap{background:white}
+
+    /* Zoom dentro del modal */
+    .zoom svg{width:1350px}
+
+    footer{padding:18px; color:var(--muted); font-size:12px; text-align:center}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Grupo Diana – Canvas Arquitecturas</h1>
+      <div class="sub">Ahora los diagramas están en <b>flowchart</b> (compatible con Mermaid 10) y en tamaño grande. Usa “Ver grande” para abrir en modal y tomar el pantallazo sin recortes.</div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+
+      <!-- AS-IS -->
+      <section class="card">
+        <div class="card-h">
+          <div class="title">
+            <b>Arquitectura AS-IS</b>
+            <small>Estado actual: Consumo heterogéneo, gobierno limitado.</small>
+          </div>
+          <div class="actions">
+            <button class="btn" data-copy="m-asis" onclick="copyText('m-asis')">Copiar Mermaid</button>
+            <button class="btn" onclick="openModal('asis')">Ver grande</button>
+          </div>
+        </div>
+        <div class="canvas">
+          <div class="mermaid-wrap">
+            <div class="mermaid" data-diagram="asis">
+flowchart LR
+  %% =========================
+  %% FUENTES (AS-IS)
+  %% =========================
+  subgraph A["Fuentes / Sistemas (AS-IS)"]
+    subgraph ONP["On-prem (Liberty DC)"]
+      SIESA["Siesa"]
+      KACT["Kactus"]
+      QX["Querix"]
+      FSV["File Server / Carpetas compartidas"]
+      ADL["Active Directory (local)"]
+    end
+
+    subgraph GCP["Cloud Operacional (GCP)"]
+      SAP["SAP ECC RISE (ERP)"]
+      SIIM["SIIMED"]
+      SICO["Sicoe"]
+      TAT["Apps TAT (comercial)"]
+      SQL["BDs SQL / SQL Server"]
+      API["APIs / Conectores"]
+    end
+
+    subgraph AZ["Colaboración (M365 / Azure)"]
+      AAD["Azure AD"]
+      SP["SharePoint / OneDrive"]
+      PBIS["Power BI Service"]
+    end
+  end
+
+  %% =========================
+  %% PROCESAMIENTO / CONSOLIDACIÓN (AS-IS)
+  %% =========================
+  subgraph B["Procesamiento / Consolidación (AS-IS)"]
+    QLIK["QlikView / Qlik<br/>Visualizador + Procesador<br/>(modelos, scripts, consolidación)"]
+    EXCETL["Excel / Reportes con ETL<br/>(transformaciones manuales)"]
+    PBIGW["Power BI Gateway<br/>(conectividad a orígenes)"]
+  end
+
+  %% =========================
+  %% REPOS USUARIOS / ÁREAS
+  %% =========================
+  subgraph C["Repositorios de usuarios / áreas"]
+    REPO["Repos (carpetas / SharePoint / archivos área)<br/>CSV exportados / datasets locales"]
+  end
+
+  %% =========================
+  %% CONSUMO
+  %% =========================
+  subgraph D["Consumo"]
+    QV["Tableros Qlik (vigentes)"]
+    PBI["Power BI (reportes vigentes)<br/>conectado a repos / gateway / fuentes"]
+    PPT["Reportes / PPT (manual)"]
+  end
+
+  %% =========================
+  %% GOBIERNO (AS-IS)
+  %% =========================
+  subgraph E["Gobierno (limitado)"]
+    GOV["Reglas no estandarizadas<br/>Trazabilidad parcial<br/>Dependencia de personas"]
+  end
+
+  %% =========================
+  %% FLUJOS AS-IS
+  %% =========================
+  SAP --> QLIK
+  SIIM --> QLIK
+  SICO --> QLIK
+  TAT --> QLIK
+  SQL --> QLIK
+  API --> QLIK
+
+  SIESA --> QLIK
+  KACT --> QLIK
+  QX --> QLIK
+  FSV --> QLIK
+
+  QLIK --> QV
+  QLIK -->|Exporta CSV| REPO
+
+  EXCETL -->|Genera archivos| REPO
+  SP --> REPO
+
+  REPO --> PBI
+  PBIGW --> PBI
+
+  QLIK --> PPT
+  EXCETL --> PPT
+
+  GOV -.->|impacta| QLIK
+  GOV -.->|impacta| REPO
+  GOV -.->|impacta| PBI
+
+            </div>
+          </div>
+          <details>
+            <summary>Ver código Mermaid</summary>
+            <pre id="m-asis">flowchart LR
+    %% =========================
+  %% FUENTES (AS-IS)
+  %% =========================
+  subgraph A["Fuentes / Sistemas (AS-IS)"]
+    subgraph ONP["On-prem (Liberty DC)"]
+      SIESA["Siesa"]
+      KACT["Kactus"]
+      QX["Querix"]
+      FSV["File Server / Carpetas compartidas"]
+      ADL["Active Directory (local)"]
+    end
+
+    subgraph GCP["Cloud Operacional (GCP)"]
+      SAP["SAP ECC RISE (ERP)"]
+      SIIM["SIIMED"]
+      SICO["Sicoe"]
+      TAT["Apps TAT (comercial)"]
+      SQL["BDs SQL / SQL Server"]
+      API["APIs / Conectores"]
+    end
+
+    subgraph AZ["Colaboración (M365 / Azure)"]
+      AAD["Azure AD"]
+      SP["SharePoint / OneDrive"]
+      PBIS["Power BI Service"]
+    end
+  end
+
+  %% =========================
+  %% PROCESAMIENTO / CONSOLIDACIÓN (AS-IS)
+  %% =========================
+  subgraph B["Procesamiento / Consolidación (AS-IS)"]
+    QLIK["QlikView / Qlik<br/>Visualizador + Procesador<br/>(modelos, scripts, consolidación)"]
+    EXCETL["Excel / Reportes con ETL<br/>(transformaciones manuales)"]
+    PBIGW["Power BI Gateway<br/>(conectividad a orígenes)"]
+  end
+
+  %% =========================
+  %% REPOS USUARIOS / ÁREAS
+  %% =========================
+  subgraph C["Repositorios de usuarios / áreas"]
+    REPO["Repos (carpetas / SharePoint / archivos área)<br/>CSV exportados / datasets locales"]
+  end
+
+  %% =========================
+  %% CONSUMO
+  %% =========================
+  subgraph D["Consumo"]
+    QV["Tableros Qlik (vigentes)"]
+    PBI["Power BI (reportes vigentes)<br/>conectado a repos / gateway / fuentes"]
+    PPT["Reportes / PPT (manual)"]
+  end
+
+  %% =========================
+  %% GOBIERNO (AS-IS)
+  %% =========================
+  subgraph E["Gobierno (limitado)"]
+    GOV["Reglas no estandarizadas<br/>Trazabilidad parcial<br/>Dependencia de personas"]
+  end
+
+  %% =========================
+  %% FLUJOS AS-IS
+  %% =========================
+  SAP --> QLIK
+  SIIM --> QLIK
+  SICO --> QLIK
+  TAT --> QLIK
+  SQL --> QLIK
+  API --> QLIK
+
+  SIESA --> QLIK
+  KACT --> QLIK
+  QX --> QLIK
+  FSV --> QLIK
+
+  QLIK --> QV
+  QLIK -->|Exporta CSV| REPO
+
+  EXCETL -->|Genera archivos| REPO
+  SP --> REPO
+
+  REPO --> PBI
+  PBIGW --> PBI
+
+  QLIK --> PPT
+  EXCETL --> PPT
+
+  GOV -.->|impacta| QLIK
+  GOV -.->|impacta| REPO
+  GOV -.->|impacta| PBI</pre>
+          </details>
+        </div>
+      </section>
+
+      <!-- TRANSICION -->
+      <section class="card">
+        <div class="card-h">
+          <div class="title">
+            <b>Arquitectura de Transición</b>
+            <small>Convivencia controlada: Qlik acelera, TO-BE crece por dominios, Power BI inicia consumo.</small>
+          </div>
+          <div class="actions">
+            <button class="btn" data-copy="m-trans" onclick="copyText('m-trans')">Copiar Mermaid</button>
+            <button class="btn" onclick="openModal('trans')">Ver grande</button>
+          </div>
+        </div>
+        <div class="canvas">
+          <div class="mermaid-wrap">
+            <div class="mermaid" data-diagram="trans">
+flowchart LR
+  %% =========================
+  %% ORÍGENES
+  %% =========================
+  subgraph A["Fuentes (durante transición)"]
+    subgraph ONP["On-prem (Liberty DC)"]
+      SIESA["Siesa"]
+      KACT["Kactus"]
+      QX["Querix"]
+      FSV["File Server / Carpetas compartidas"]
+      ADL["Active Directory (local)"]
+    end
+
+    subgraph GCP["Cloud Operacional (GCP)"]
+      SAP["SAP ECC RISE"]
+      SIIM["SIIMED"]
+      SICO["Sicoe"]
+      TAT["Apps TAT"]
+      SQL["BDs SQL / SQL Server"]
+      API["APIs / Conectores"]
+      QLIKCORE["QlikView / Qlik Engine"]
+    end
+
+    subgraph M365["Colaboración (M365 / Azure)"]
+      AAD["Azure AD"]
+      SP["SharePoint / OneDrive (áreas)"]
+      PBIS["Power BI Service"]
+    end
+  end
+
+  %% =========================
+  %% QLIK EN TRANSICIÓN
+  %% =========================
+  subgraph Q["Qlik (Transición)"]
+    QLIK["Qlik<br/>Visualizador + Procesador (vigente)<br/>Acelerador de transición"]
+  end
+
+  subgraph R["Repositorios (se mantienen durante transición)"]
+    REPO["Repos (carpetas/SharePoint/archivos área)<br/>CSV exportados"]
+  end
+
+  %% =========================
+  %% CONECTIVIDAD HACIA AWS (CLAVE)
+  %% =========================
+  subgraph NET["Conectividad para que AWS 'vea' los sistemas"]
+    CORP["Red corporativa / Seguridad (TI)"]
+    VPN["VPN Site-to-Site (recomendado)"]
+    DX["Direct Connect (opcional)"]
+  end
+
+  %% =========================
+  %% AWS (TRANSICIÓN) – DATA PLATFORM
+  %% =========================
+  subgraph AWS["AWS – Data Platform (Transición)"]
+    subgraph VPC["VPC + Subnets (privadas)"]
+      BR["S3 Bronze / Raw"]
+      SI["S3 Silver / Curate"]
+      GO["S3 Gold / Stage"]
+      GLUE["AWS Glue (ETL/Jobs/Crawlers)"]
+      DQ["Glue Data Quality"]
+      SF["Step Functions (orquestación)"]
+      EV["EventBridge (eventos)"]
+      ATH["Athena"]
+      RDS["Redshift"]
+    end
+
+    subgraph SEC["Gobierno/Seguridad/Operación (AWS)"]
+      CAT["Glue Catalog"]
+      LF["Lake Formation"]
+      IAM["IAM"]
+      CW["CloudWatch"]
+      CT["CloudTrail"]
+    end
+  end
+
+  %% =========================
+  %% CONSUMO / ORGANIZACIÓN
+  %% =========================
+  subgraph CONS["Consumo y activos"]
+    PBIGW["Power BI Gateway (corporativo)"]
+    PBI["Power BI (consumo mixto)"]
+    WS["Workspaces por gerencia/área"]
+    SPTI["SharePoint TI central<br/>(assets oficiales)"]
+    QV["Tableros Qlik (vigentes)"]
+  end
+
+  %% =========================
+  %% RUTA 1: AS-IS SE MANTIENE (Qlik → CSV → repos → PBI)
+  %% =========================
+  SAP --> QLIK
+  SIIM --> QLIK
+  SICO --> QLIK
+  TAT --> QLIK
+  SQL --> QLIK
+  API --> QLIK
+
+  SIESA --> QLIK
+  KACT --> QLIK
+  QX --> QLIK
+  FSV --> QLIK
+
+  QLIK --> QV
+  QLIK -->|Exporta CSV| REPO
+  REPO -->|Conectores/archivos| PBI
+
+  %% =========================
+  %% RUTA 2: AWS CRECE (INGESTA ESTÁNDAR)
+  %% =========================
+  CORP --> VPN --> VPC
+  CORP --> DX --> VPC
+
+  SAP -->|extracción controlada| GLUE
+  SQL -->|extracción controlada| GLUE
+  API -->|extracción controlada| GLUE
+  FSV -->|archivos controlados| BR
+
+  GLUE --> BR
+  BR --> GLUE --> SI
+  SI --> GLUE --> GO
+  GLUE --> DQ
+  EV --> SF --> GLUE
+
+  GO --> ATH --> PBI
+  GO --> RDS --> PBI
+
+  %% =========================
+  %% RUTA 3: ACELERADOR (Qlik escribe directo a S3 Bronze)
+  %% =========================
+  QLIK -->|Extracts/CSV controlados| BR
+
+  %% =========================
+  %% CONSUMO GOBERNADO (TRANSICIÓN)
+  %% =========================
+  PBIS --> WS
+  PBI --> WS
+  PBIGW --> PBI
+  SPTI --> WS
+
+  %% =========================
+  %% GOBIERNO AWS
+  %% =========================
+  CAT -.-> GLUE
+  LF -.-> BR
+  LF -.-> SI
+  LF -.-> GO
+  IAM -.-> LF
+  CW -.-> GLUE
+  CT -.-> IAM
+            </div>
+          </div>
+          <details>
+            <summary>Ver código Mermaid</summary>
+            <pre id="m-trans">flowchart LR
+  %% =========================
+  %% ORÍGENES
+  %% =========================
+  subgraph A["Fuentes (durante transición)"]
+    subgraph ONP["On-prem (Liberty DC)"]
+      SIESA["Siesa"]
+      KACT["Kactus"]
+      QX["Querix"]
+      FSV["File Server / Carpetas compartidas"]
+      ADL["Active Directory (local)"]
+    end
+
+    subgraph GCP["Cloud Operacional (GCP)"]
+      SAP["SAP ECC RISE"]
+      SIIM["SIIMED"]
+      SICO["Sicoe"]
+      TAT["Apps TAT"]
+      SQL["BDs SQL / SQL Server"]
+      API["APIs / Conectores"]
+      QLIKCORE["QlikView / Qlik Engine"]
+    end
+
+    subgraph M365["Colaboración (M365 / Azure)"]
+      AAD["Azure AD"]
+      SP["SharePoint / OneDrive (áreas)"]
+      PBIS["Power BI Service"]
+    end
+  end
+
+  %% =========================
+  %% QLIK EN TRANSICIÓN
+  %% =========================
+  subgraph Q["Qlik (Transición)"]
+    QLIK["Qlik<br/>Visualizador + Procesador (vigente)<br/>Acelerador de transición"]
+  end
+
+  subgraph R["Repositorios (se mantienen durante transición)"]
+    REPO["Repos (carpetas/SharePoint/archivos área)<br/>CSV exportados"]
+  end
+
+  %% =========================
+  %% CONECTIVIDAD HACIA AWS (CLAVE)
+  %% =========================
+  subgraph NET["Conectividad para que AWS 'vea' los sistemas"]
+    CORP["Red corporativa / Seguridad (TI)"]
+    VPN["VPN Site-to-Site (recomendado)"]
+    DX["Direct Connect (opcional)"]
+  end
+
+  %% =========================
+  %% AWS (TRANSICIÓN) – DATA PLATFORM
+  %% =========================
+  subgraph AWS["AWS – Data Platform (Transición)"]
+    subgraph VPC["VPC + Subnets (privadas)"]
+      BR["S3 Bronze / Raw"]
+      SI["S3 Silver / Curate"]
+      GO["S3 Gold / Stage"]
+      GLUE["AWS Glue (ETL/Jobs/Crawlers)"]
+      DQ["Glue Data Quality"]
+      SF["Step Functions (orquestación)"]
+      EV["EventBridge (eventos)"]
+      ATH["Athena"]
+      RDS["Redshift"]
+    end
+
+    subgraph SEC["Gobierno/Seguridad/Operación (AWS)"]
+      CAT["Glue Catalog"]
+      LF["Lake Formation"]
+      IAM["IAM"]
+      CW["CloudWatch"]
+      CT["CloudTrail"]
+    end
+  end
+
+  %% =========================
+  %% CONSUMO / ORGANIZACIÓN
+  %% =========================
+  subgraph CONS["Consumo y activos"]
+    PBIGW["Power BI Gateway (corporativo)"]
+    PBI["Power BI (consumo mixto)"]
+    WS["Workspaces por gerencia/área"]
+    SPTI["SharePoint TI central<br/>(assets oficiales)"]
+    QV["Tableros Qlik (vigentes)"]
+  end
+
+  %% =========================
+  %% RUTA 1: AS-IS SE MANTIENE (Qlik → CSV → repos → PBI)
+  %% =========================
+  SAP --> QLIK
+  SIIM --> QLIK
+  SICO --> QLIK
+  TAT --> QLIK
+  SQL --> QLIK
+  API --> QLIK
+
+  SIESA --> QLIK
+  KACT --> QLIK
+  QX --> QLIK
+  FSV --> QLIK
+
+  QLIK --> QV
+  QLIK -->|Exporta CSV| REPO
+  REPO -->|Conectores/archivos| PBI
+
+  %% =========================
+  %% RUTA 2: AWS CRECE (INGESTA ESTÁNDAR)
+  %% =========================
+  CORP --> VPN --> VPC
+  CORP --> DX --> VPC
+
+  SAP -->|extracción controlada| GLUE
+  SQL -->|extracción controlada| GLUE
+  API -->|extracción controlada| GLUE
+  FSV -->|archivos controlados| BR
+
+  GLUE --> BR
+  BR --> GLUE --> SI
+  SI --> GLUE --> GO
+  GLUE --> DQ
+  EV --> SF --> GLUE
+
+  GO --> ATH --> PBI
+  GO --> RDS --> PBI
+
+  %% =========================
+  %% RUTA 3: ACELERADOR (Qlik escribe directo a S3 Bronze)
+  %% =========================
+  QLIK -->|Extracts/CSV controlados| BR
+
+  %% =========================
+  %% CONSUMO GOBERNADO (TRANSICIÓN)
+  %% =========================
+  PBIS --> WS
+  PBI --> WS
+  PBIGW --> PBI
+  SPTI --> WS
+
+  %% =========================
+  %% GOBIERNO AWS
+  %% =========================
+  CAT -.-> GLUE
+  LF -.-> BR
+  LF -.-> SI
+  LF -.-> GO
+  IAM -.-> LF
+  CW -.-> GLUE
+  CT -.-> IAM</pre>
+          </details>
+        </div>
+      </section>
+
+      <!-- TO-BE -->
+      <section class="card">
+        <div class="card-h">
+          <div class="title">
+            <b>Arquitectura TO-BE</b>
+            <small>Dominios gobernados, datasets certificados, consumo estandarizado y gobierno embebido.</small>
+          </div>
+          <div class="actions">
+            <button class="btn" data-copy="m-tobe" onclick="copyText('m-tobe')">Copiar Mermaid</button>
+            <button class="btn" onclick="openModal('tobe')">Ver grande</button>
+          </div>
+        </div>
+        <div class="canvas">
+          <div class="mermaid-wrap">
+            <div class="mermaid" data-diagram="tobe">
+flowchart LR
+  %% =========================
+  %% ORÍGENES (TO-BE)
+  %% =========================
+  subgraph A["Fuentes (TO-BE – sistemas operacionales)"]
+    subgraph ONP["On-prem (legacy donde aplique)"]
+      SIESA["Siesa (legacy)"]
+      KACT["Kactus (legacy)"]
+      QX["Querix (legacy)"]
+      FSV["File Server (solo excepciones controladas)"]
+      ADL["AD local (si aplica)"]
+    end
+
+    subgraph GCP["Cloud Operacional (GCP)"]
+      SAP["SAP ECC RISE"]
+      SIIM["SIIMED"]
+      SICO["Sicoe"]
+      TAT["Apps TAT"]
+      SQL["BDs SQL / SQL Server"]
+      API["APIs / Conectores"]
+    end
+
+    subgraph M365["Colaboración (M365/Azure)"]
+      AAD["Azure AD"]
+      SP["SharePoint / OneDrive<br/>(solo soporte documental / activos)"]
+    end
+  end
+
+  %% =========================
+  %% CONECTIVIDAD HACIA AWS (CLAVE)
+  %% =========================
+  subgraph NET["Conectividad (obligatoria para integrar cloud con orígenes)"]
+    CORP["Red corporativa / Seguridad TI"]
+    VPN["VPN Site-to-Site"]
+    DX["Direct Connect (opcional)"]
+  end
+
+  %% =========================
+  %% AWS TO-BE (ESTADO OBJETIVO)
+  %% =========================
+  subgraph AWS["AWS – Data Platform (TO-BE)"]
+    subgraph VPC["VPC + Subnets privadas + Endpoints"]
+      BR["S3 Bronze / Raw"]
+      SI["S3 Silver / Trusted"]
+      GO["S3 Gold / Curated"]
+      GLUE["AWS Glue ETL (Jobs/Crawlers)"]
+      DQ["Glue Data Quality<br/>(reglas por dominio)"]
+      SF["Step Functions"]
+      EV["EventBridge"]
+      ATH["Athena"]
+      RDS["Redshift (serving)"]
+      APIG["API Gateway (APIs de datos – si aplica)"]
+    end
+
+    subgraph GOV["Gobierno/Seguridad/Operación (AWS)"]
+      CAT["Glue Data Catalog"]
+      LF["Lake Formation"]
+      IAM["IAM"]
+      CW["CloudWatch"]
+      CT["CloudTrail"]
+    end
+  end
+
+  %% =========================
+  %% CONSUMO ESTÁNDAR
+  %% =========================
+  subgraph CONS["Consumo estándar (TO-BE)"]
+    PBI["Power BI (estándar corporativo)"]
+    WS["Workspaces por gerencia/área"]
+    SPTI["SharePoint TI central<br/>(assets oficiales)"]
+    AI["IA / analítica avanzada<br/>(SageMaker/Bedrock si aplica)"]
+  end
+
+  %% =========================
+  %% QLIK EN TO-BE (NO VISUALIZA)
+  %% =========================
+  subgraph QLEG["Qlik (TO-BE) – Solo procesador (legacy/opcional)"]
+    QPROC["Qlik Processor<br/>(scripts/outputs legacy)"]
+    REPO["Repos de área (residual)<br/>a deprecar"]
+  end
+
+  %% =========================
+  %% CONECTIVIDAD
+  %% =========================
+  CORP --> VPN --> VPC
+  CORP --> DX --> VPC
+
+  %% =========================
+  %% INGESTA ESTÁNDAR AWS
+  %% =========================
+  SAP -->|extracción controlada| GLUE
+  SIIM -->|extracción controlada| GLUE
+  SICO -->|extracción controlada| GLUE
+  TAT -->|extracción controlada| GLUE
+  SQL -->|extracción controlada| GLUE
+  API -->|extracción controlada| GLUE
+  FSV -->|archivos controlados| BR
+
+  GLUE --> BR
+  BR --> GLUE --> SI
+  SI --> GLUE --> GO
+
+  GLUE --> DQ
+  EV --> SF --> GLUE
+
+  %% =========================
+  %% SERVING / CONSUMO
+  %% =========================
+  GO --> ATH --> PBI
+  GO --> RDS --> PBI
+  APIG --> PBI
+
+  PBI --> WS
+  SPTI --> WS
+  GO --> AI
+
+  %% =========================
+  %% GOBIERNO
+  %% =========================
+  CAT -.-> GLUE
+  LF -.-> BR
+  LF -.-> SI
+  LF -.-> GO
+  IAM -.-> LF
+  CW -.-> GLUE
+  CT -.-> IAM
+
+  %% =========================
+  %% QLIK LEGACY (SOLO PROCESADOR) – RUTA DE SALIDA
+  %% =========================
+  SAP -.->|solo si quedan outputs legacy| QPROC
+  QPROC -->|outputs controlados| BR
+  QPROC -.->|residual| REPO
+  REPO -.->|deprecar| PBI
+            </div>
+          </div>
+          <details>
+            <summary>Ver código Mermaid</summary>
+            <pre id="m-tobe">flowchart LR
+  %% =========================
+  %% ORÍGENES (TO-BE)
+  %% =========================
+  subgraph A["Fuentes (TO-BE – sistemas operacionales)"]
+    subgraph ONP["On-prem (legacy donde aplique)"]
+      SIESA["Siesa (legacy)"]
+      KACT["Kactus (legacy)"]
+      QX["Querix (legacy)"]
+      FSV["File Server (solo excepciones controladas)"]
+      ADL["AD local (si aplica)"]
+    end
+
+    subgraph GCP["Cloud Operacional (GCP)"]
+      SAP["SAP ECC RISE"]
+      SIIM["SIIMED"]
+      SICO["Sicoe"]
+      TAT["Apps TAT"]
+      SQL["BDs SQL / SQL Server"]
+      API["APIs / Conectores"]
+    end
+
+    subgraph M365["Colaboración (M365/Azure)"]
+      AAD["Azure AD"]
+      SP["SharePoint / OneDrive<br/>(solo soporte documental / activos)"]
+    end
+  end
+
+  %% =========================
+  %% CONECTIVIDAD HACIA AWS (CLAVE)
+  %% =========================
+  subgraph NET["Conectividad (obligatoria para integrar cloud con orígenes)"]
+    CORP["Red corporativa / Seguridad TI"]
+    VPN["VPN Site-to-Site"]
+    DX["Direct Connect (opcional)"]
+  end
+
+  %% =========================
+  %% AWS TO-BE (ESTADO OBJETIVO)
+  %% =========================
+  subgraph AWS["AWS – Data Platform (TO-BE)"]
+    subgraph VPC["VPC + Subnets privadas + Endpoints"]
+      BR["S3 Bronze / Raw"]
+      SI["S3 Silver / Trusted"]
+      GO["S3 Gold / Curated"]
+      GLUE["AWS Glue ETL (Jobs/Crawlers)"]
+      DQ["Glue Data Quality<br/>(reglas por dominio)"]
+      SF["Step Functions"]
+      EV["EventBridge"]
+      ATH["Athena"]
+      RDS["Redshift (serving)"]
+      APIG["API Gateway (APIs de datos – si aplica)"]
+    end
+
+    subgraph GOV["Gobierno/Seguridad/Operación (AWS)"]
+      CAT["Glue Data Catalog"]
+      LF["Lake Formation"]
+      IAM["IAM"]
+      CW["CloudWatch"]
+      CT["CloudTrail"]
+    end
+  end
+
+  %% =========================
+  %% CONSUMO ESTÁNDAR
+  %% =========================
+  subgraph CONS["Consumo estándar (TO-BE)"]
+    PBI["Power BI (estándar corporativo)"]
+    WS["Workspaces por gerencia/área"]
+    SPTI["SharePoint TI central<br/>(assets oficiales)"]
+    AI["IA / analítica avanzada<br/>(SageMaker/Bedrock si aplica)"]
+  end
+
+  %% =========================
+  %% QLIK EN TO-BE (NO VISUALIZA)
+  %% =========================
+  subgraph QLEG["Qlik (TO-BE) – Solo procesador (legacy/opcional)"]
+    QPROC["Qlik Processor<br/>(scripts/outputs legacy)"]
+    REPO["Repos de área (residual)<br/>a deprecar"]
+  end
+
+  %% =========================
+  %% CONECTIVIDAD
+  %% =========================
+  CORP --> VPN --> VPC
+  CORP --> DX --> VPC
+
+  %% =========================
+  %% INGESTA ESTÁNDAR AWS
+  %% =========================
+  SAP -->|extracción controlada| GLUE
+  SIIM -->|extracción controlada| GLUE
+  SICO -->|extracción controlada| GLUE
+  TAT -->|extracción controlada| GLUE
+  SQL -->|extracción controlada| GLUE
+  API -->|extracción controlada| GLUE
+  FSV -->|archivos controlados| BR
+
+  GLUE --> BR
+  BR --> GLUE --> SI
+  SI --> GLUE --> GO
+
+  GLUE --> DQ
+  EV --> SF --> GLUE
+
+  %% =========================
+  %% SERVING / CONSUMO
+  %% =========================
+  GO --> ATH --> PBI
+  GO --> RDS --> PBI
+  APIG --> PBI
+
+  PBI --> WS
+  SPTI --> WS
+  GO --> AI
+
+  %% =========================
+  %% GOBIERNO
+  %% =========================
+  CAT -.-> GLUE
+  LF -.-> BR
+  LF -.-> SI
+  LF -.-> GO
+  IAM -.-> LF
+  CW -.-> GLUE
+  CT -.-> IAM
+
+  %% =========================
+  %% QLIK LEGACY (SOLO PROCESADOR) – RUTA DE SALIDA
+  %% =========================
+  SAP -.->|solo si quedan outputs legacy| QPROC
+  QPROC -->|outputs controlados| BR
+  QPROC -.->|residual| REPO
+  REPO -.->|deprecar| PBI</pre>
+          </details>
+        </div>
+      </section>
+
+      <!-- FLOW -->
+      <section class="card">
+        <div class="card-h">
+          <div class="title">
+            <b>Flujo end-to-end (Sequence)</b>
+            <small>Desde fuentes (incluye AWS) a consumo (Power BI workspaces) con gobierno embebido y Qlik como acelerador.</small>
+          </div>
+          <div class="actions">
+            <button class="btn" data-copy="m-flow" onclick="copyText('m-flow')">Copiar Mermaid</button>
+            <button class="btn" onclick="openModal('flow')">Ver grande</button>
+          </div>
+        </div>
+        <div class="canvas">
+          <div class="mermaid-wrap">
+            <div class="mermaid" data-diagram="flow">
+sequenceDiagram
+autonumber
+
+%% ===== Actores / Sistemas =====
+participant USERS as Usuarios Negocio
+participant WS as Power BI Workspaces (Gerencias/Áreas)
+participant PBI as Power BI Service
+participant SPTI as SharePoint TI Central (assets oficiales)
+participant REPO as Repos Áreas (CSV/Archivos vigentes)
+
+participant QLIK as Qlik (visualizador+procesador)
+
+participant ONP as On-prem (Siesa/Kactus/Querix/FileSrv/AD)
+participant GCP as GCP Operacional (SAP ECC RISE / SIIMED / Sicoe / TAT / SQL)
+participant API as APIs / Conectores
+
+participant CORP as Red TI / Seguridad
+participant VPN as VPN S2S / Direct Connect
+participant VPC as AWS VPC (subnets privadas)
+
+participant APP as AppFlow (opcional)
+participant LMB as Lambda (opcional)
+participant GLUE as AWS Glue (Jobs/Crawlers/ETL)
+participant ORCH as EventBridge + Step Functions
+participant S3B as S3 Bronze/Raw
+participant S3S as S3 Silver/Trusted
+participant S3G as S3 Gold/Curated
+participant ATH as Athena / Redshift (Serving)
+participant GOV as Gobierno AWS (Catalog/LakeFormation/IAM)
+participant CW as Observabilidad (CloudWatch/CloudTrail)
+
+%% ===================================================================
+%% ETAPA 0 — AS-IS (Hoy)
+%% ===================================================================
+rect rgba(230,230,230,0.55)
+Note over ONP,PBI: ETAPA 0 (AS-IS) — Operación vigente
+GCP->>QLIK: Qlik consume datos (SAP/SIIMED/Sicoe/TAT/SQL)
+ONP->>QLIK: Qlik consume legacy on-prem (si aplica)
+API->>QLIK: Qlik integra APIs/conectores
+
+QLIK->>REPO: Exporta CSV / extracts para áreas
+REPO->>PBI: Power BI consume CSV/archivos (reportes vigentes)
+QLIK->>PBI: (Opcional) dataset consolidado para algunos reportes
+
+PBI->>WS: Publicación en workspaces por gerencia/área
+WS->>USERS: Acceso a tableros/reportes (modelo actual)
+end
+
+%% -------------------- H0 --------------------
+rect rgba(255,255,210,0.70)
+Note over USERS,CORP: H0 — Línea base y control de transición\n- Inventario reportes Qlik/PBI\n- Identificar CSVs críticos y dueños\n- Dominios priorizados: Clientes / Proveedores / Agrícola\n- Definir criterios de “salida” por dominio (calidad, linaje, seguridad)
+end
+
+%% ===================================================================
+%% ETAPA 1 — Habilitadores (Conectividad + Fundaciones)
+%% ===================================================================
+rect rgba(245,235,255,0.55)
+Note over CORP,VPC: ETAPA 1 — Habilitadores técnicos (conectividad + base AWS)
+CORP->>VPN: Implementar conectividad segura (VPN S2S / Direct Connect)
+VPN->>VPC: Rutas + subnets privadas + controles de acceso
+CW-->>VPC: Habilitar auditoría/monitoreo (CloudWatch/CloudTrail)
+end
+
+%% -------------------- H1 --------------------
+rect rgba(255,255,210,0.70)
+Note over VPN,GOV: H1 — AWS “alcanzable” y seguro\n- VPN/DX operativa\n- VPC/subnets privadas listas\n- IAM roles base\n- Lake Formation + Catalog inicial\n- Estándares de rutas/naming en S3
+end
+
+%% ===================================================================
+%% ETAPA 2 — Transición: coexistencia controlada (3 rutas)
+%% ===================================================================
+rect rgba(220,245,255,0.60)
+Note over QLIK,ATH: ETAPA 2 (TRANSICIÓN) — Coexistencia controlada: 3 rutas en paralelo
+
+%% ---- Ruta A: Qlik -> CSV -> Repos -> PBI (se mantiene) ----
+Note over QLIK,REPO: Ruta A (se mantiene): continuidad operativa
+GCP->>QLIK: Qlik sigue consolidando para operación (sin ruptura)
+QLIK->>REPO: Sigue exportando CSVs (vigentes)
+REPO->>PBI: Power BI sigue consumiendo CSVs (mientras migra)
+
+%% -------------------- H2 --------------------
+rect rgba(255,255,210,0.70)
+Note over QLIK,PBI: H2 — Control de coexistencia\n- “Lista blanca” de CSVs permitidos\n- Contratos de datos mínimos (definición, owner, periodicidad)\n- Evidencia de dependencias (qué reporte depende de qué CSV)
+end
+
+%% ---- Ruta B: Qlik -> S3 Bronze (acelerador) ----
+Note over QLIK,S3B: Ruta B (acelerador): Qlik escribe directo a S3 Bronze
+QLIK->>S3B: Export controlado (CSV/extracts) a Bronze/Raw
+GOV-->>S3B: Permisos + rutas + ownership + naming mínimos
+
+%% -------------------- H3 --------------------
+rect rgba(255,255,210,0.70)
+Note over S3B,GOV: H3 — Primer dominio “aterriza” en AWS (Bronze)\n- Al menos 1 dominio priorizado aterrizado\n- Acceso controlado (LF/IAM)\n- Trazabilidad mínima del origen (metadata)\n- Reglas de calidad iniciales definidas
+end
+
+%% ---- Ruta C: Estándar AWS: Orígenes -> Glue -> S3 -> Serving -> PBI ----
+Note over GCP,GLUE: Ruta C (objetivo incremental): Ingesta/ETL con Glue + orquestación
+GCP->>APP: (Opcional) AppFlow para cargas gestionadas
+GCP->>LMB: (Opcional) Lambda para APIs/eventos
+APP->>S3B: Entrada a Bronze/Raw
+LMB->>S3B: Entrada a Bronze/Raw
+
+GCP->>GLUE: Extracción controlada (batch/near-RT) cuando aplique
+ONP->>GLUE: Extracción legacy (si aplica)
+API->>GLUE: Ingesta desde conectores
+
+ORCH->>GLUE: EventBridge dispara StepFn/Jobs (planificación/eventos)
+GLUE->>S3B: Carga/normalización inicial
+GLUE->>S3S: Transformación a Silver/Trusted
+GLUE->>S3G: Curación a Gold/Curated (modelos/KPIs)
+GOV->>GLUE: Catálogo/linaje/permisos (Catalog + Lake Formation + IAM)
+GOV->>S3B: Controles de acceso/clasificación
+GOV->>S3S: Controles de acceso/clasificación
+GOV->>S3G: Controles de acceso/clasificación
+CW-->>GLUE: Logs/alertas/operación
+
+S3G->>ATH: Serving (Athena/Redshift según caso)
+ATH->>PBI: Datasets certificados / modelos para BI
+PBI->>WS: Publicación por workspace (modelo objetivo)
+SPTI->>WS: Assets oficiales (diccionarios, definiciones, guías)
+WS->>USERS: Usuarios consumen reportes nuevos + vigentes (coexistencia)
+end
+
+%% -------------------- H4 --------------------
+rect rgba(255,255,210,0.70)
+Note over S3G,WS: H4 — “Fuente de verdad” por dominio\n- Dominio publicado en Gold + Serving\n- Dataset certificado disponible en Power BI\n- Reporte equivalente validado por negocio\n- KPI/definición alineada a glosario
+end
+
+%% ===================================================================
+%% ETAPA 3 — TO-BE (Estado objetivo)
+%% ===================================================================
+rect rgba(235,255,235,0.60)
+Note over S3G,USERS: ETAPA 3 TO-BE — Power BI estándar datasets certificados gobierno embebido
+
+S3G->>ATH: Serving estándar (Athena/Redshift)
+ATH->>PBI: Consumo preferente desde datasets certificados
+PBI->>WS: Workspaces por gerencia/área (gobernados)
+SPTI->>WS: Assets oficiales (definiciones, diccionarios, guías)
+WS->>USERS: Consumo estándar y controlado
+end
+
+%% -------------------- H5 --------------------
+rect rgba(255,255,210,0.70)
+Note over QLIK,WS: H5 — Qlik deja de ser visualizador (por gerencia/dominio)<br/>- Reportes migrados a Power BI<br/>- Usuarios firmaron aceptación<br/>- Qlik queda solo para outputs legacy (si aplica)<br/>- Plan de apagado por ola (wave)
+end
+
+%% ===================================================================
+%% ETAPA 4 — Deprecación controlada de Qlik / Repos área
+%% ===================================================================
+rect rgba(240,240,240,0.50)
+Note over QLIK,REPO: ETAPA 4 — Deprecación controlada (residual -> retiro)
+QLIK-->>S3B: (Residual) outputs legacy hasta retiro final
+REPO-->>PBI: (Residual) conexiones a CSVs hasta retiro final
+end
+
+%% -------------------- H6 --------------------
+rect rgba(255,255,210,0.70)
+Note over GOV,USERS: H6 — Retiro de dependencias legacy<br/>- Qlik sin tableros productivos<br/>- Repos de área sin CSVs como fuente<br/>- Auditoría de accesos y trazabilidad completa<br/>- Operación y soporte formalizados (runbooks)
+end</pre>
+          </details>
+        </div>
+      </section>
+<!-- G1: Publicación de Producto de Datos (Certificación) -->
+<section class="card">
+  <div class="card-h">
+    <div class="title">
+      <b>G1 – Publicación de Producto de Datos (Certificación)</b>
+      <small>Flujo end-to-end con tecnología: AppFlow/Lambda → S3 Bronze/Silver/Gold → Glue + DQ + Catálogo/Lake Formation → Athena/Redshift → Power BI + Workspaces.</small>
+    </div>
+    <div class="actions">
+      <button class="btn" data-copy="m-g1" onclick="copyText('m-g1')">Copiar Mermaid</button>
+      <button class="btn" onclick="openModal('g1')">Ver grande</button>
+    </div>
+  </div>
+
+  <div class="canvas">
+    <div class="mermaid-wrap">
+      <div class="mermaid" data-diagram="g1">
+sequenceDiagram
+autonumber
+
+participant BUS as Negocio (Área/Dominio)
+participant DO as Data Owner (Dominio)
+participant DS as Data Steward (Gobierno)
+participant TI as TI Plataforma (AWS)
+participant SEC as Seguridad (TI)
+participant ORCH as EventBridge + Step Functions
+participant ING as AppFlow / Lambda (ingesta)
+participant GLUE as AWS Glue (ETL/Jobs/Crawlers)
+participant DQ as Glue Data Quality (reglas)
+participant S3B as S3 Bronze/Raw
+participant S3S as S3 Silver/Trusted
+participant S3G as S3 Gold/Curated
+participant CAT as Glue Data Catalog + Glosario
+participant LF as Lake Formation + IAM
+participant SRV as Athena/Redshift (Serving)
+participant PBI as Power BI Service
+participant WS as Workspaces (Gerencias/Áreas)
+participant SPTI as SharePoint TI Central (assets)
+participant USERS as Usuarios
+
+rect rgba(230,230,230,0.55)
+Note over BUS,DO: 1) Demanda y aprobación de negocio
+BUS->>DO: Solicita producto de datos (dominio/caso de uso)
+DO->>DS: Revisión definición + KPI + alcance
+DS-->>DO: OK funcional / ajustes
+end
+
+rect rgba(220,245,255,0.60)
+Note over TI,LF: 2) Habilitación técnica y seguridad (si aplica)
+DO->>TI: Requerimiento técnico (orígenes, periodicidad, SLA)
+TI->>SEC: Evaluar clasificación de datos + acceso
+SEC->>LF: Definir permisos (IAM/LF) y políticas
+LF-->>SEC: Permisos listos
+end
+
+rect rgba(235,255,235,0.60)
+Note over ING,PBI: 3) Construcción pipeline + certificación
+ORCH->>ING: Dispara ingesta (EventBridge/StepFn)
+ING->>S3B: Carga a Bronze/Raw
+ORCH->>GLUE: Dispara ETL (StepFn)
+GLUE->>S3S: Transforma a Silver/Trusted
+GLUE->>DQ: Ejecuta reglas de calidad
+DQ-->>GLUE: Resultados de calidad
+
+alt Calidad OK
+  GLUE->>S3G: Publica a Gold/Curated
+  GLUE->>CAT: Registra metadata + linaje + owner
+  CAT->>LF: Asociar permisos al dataset
+  S3G->>SRV: Serving (Athena/Redshift)
+  SRV->>PBI: Dataset certificado disponible
+  PBI->>WS: Publicación en workspace por gerencia/área
+  SPTI->>WS: Publicar assets oficiales (diccionario/KPI/glosario)
+  WS->>USERS: Consumo gobernado (certificado)
+else Calidad NO OK
+  DQ->>DS: Incidente de calidad (no certifica)
+  DS->>DO: Se reporta impacto y acciones
+end
+end
+      </div>
+    </div>
+
+    <details>
+      <summary>Ver código Mermaid</summary>
+      <pre id="m-g1">sequenceDiagram
+autonumber
+
+participant BUS as Negocio (Área/Dominio)
+participant DO as Data Owner (Dominio)
+participant DS as Data Steward (Gobierno)
+participant TI as TI Plataforma (AWS)
+participant SEC as Seguridad (TI)
+participant ORCH as EventBridge + Step Functions
+participant ING as AppFlow / Lambda (ingesta)
+participant GLUE as AWS Glue (ETL/Jobs/Crawlers)
+participant DQ as Glue Data Quality (reglas)
+participant S3B as S3 Bronze/Raw
+participant S3S as S3 Silver/Trusted
+participant S3G as S3 Gold/Curated
+participant CAT as Glue Data Catalog + Glosario
+participant LF as Lake Formation + IAM
+participant SRV as Athena/Redshift (Serving)
+participant PBI as Power BI Service
+participant WS as Workspaces (Gerencias/Áreas)
+participant SPTI as SharePoint TI Central (assets)
+participant USERS as Usuarios
+
+rect rgba(230,230,230,0.55)
+Note over BUS,DO: 1) Demanda y aprobación de negocio
+BUS->>DO: Solicita producto de datos (dominio/caso de uso)
+DO->>DS: Revisión definición + KPI + alcance
+DS-->>DO: OK funcional / ajustes
+end
+
+rect rgba(220,245,255,0.60)
+Note over TI,LF: 2) Habilitación técnica y seguridad (si aplica)
+DO->>TI: Requerimiento técnico (orígenes, periodicidad, SLA)
+TI->>SEC: Evaluar clasificación de datos + acceso
+SEC->>LF: Definir permisos (IAM/LF) y políticas
+LF-->>SEC: Permisos listos
+end
+
+rect rgba(235,255,235,0.60)
+Note over ING,PBI: 3) Construcción pipeline + certificación
+ORCH->>ING: Dispara ingesta (EventBridge/StepFn)
+ING->>S3B: Carga a Bronze/Raw
+ORCH->>GLUE: Dispara ETL (StepFn)
+GLUE->>S3S: Transforma a Silver/Trusted
+GLUE->>DQ: Ejecuta reglas de calidad
+DQ-->>GLUE: Resultados de calidad
+
+alt Calidad OK
+  GLUE->>S3G: Publica a Gold/Curated
+  GLUE->>CAT: Registra metadata + linaje + owner
+  CAT->>LF: Asociar permisos al dataset
+  S3G->>SRV: Serving (Athena/Redshift)
+  SRV->>PBI: Dataset certificado disponible
+  PBI->>WS: Publicación en workspace por gerencia/área
+  SPTI->>WS: Publicar assets oficiales (diccionario/KPI/glosario)
+  WS->>USERS: Consumo gobernado (certificado)
+else Calidad NO OK
+  DQ->>DS: Incidente de calidad (no certifica)
+  DS->>DO: Se reporta impacto y acciones
+end
+end
+      </div>
+    </div>
+
+    <details>
+      <summary>Ver código Mermaid</summary>
+      <pre id="m-g1">sequenceDiagram
+autonumber
+
+participant BUS as Negocio (Área/Dominio)
+participant DO as Data Owner (Dominio)
+participant DS as Data Steward (Gobierno)
+participant TI as TI Plataforma (AWS)
+participant SEC as Seguridad (TI)
+participant ORCH as EventBridge + Step Functions
+participant ING as AppFlow / Lambda (ingesta)
+participant GLUE as AWS Glue (ETL/Jobs/Crawlers)
+participant DQ as Glue Data Quality (reglas)
+participant S3B as S3 Bronze/Raw
+participant S3S as S3 Silver/Trusted
+participant S3G as S3 Gold/Curated
+participant CAT as Glue Data Catalog + Glosario
+participant LF as Lake Formation + IAM
+participant SRV as Athena/Redshift (Serving)
+participant PBI as Power BI Service
+participant WS as Workspaces (Gerencias/Áreas)
+participant SPTI as SharePoint TI Central (assets)
+participant USERS as Usuarios
+
+rect rgba(230,230,230,0.55)
+Note over BUS,DO: 1) Demanda y aprobación de negocio
+BUS->>DO: Solicita producto de datos (dominio/caso de uso)
+DO->>DS: Revisión definición + KPI + alcance
+DS-->>DO: OK funcional / ajustes
+end
+
+rect rgba(220,245,255,0.60)
+Note over TI,LF: 2) Habilitación técnica y seguridad (si aplica)
+DO->>TI: Requerimiento técnico (orígenes, periodicidad, SLA)
+TI->>SEC: Evaluar clasificación de datos + acceso
+SEC->>LF: Definir permisos (IAM/LF) y políticas
+LF-->>SEC: Permisos listos
+end
+
+rect rgba(235,255,235,0.60)
+Note over ING,PBI: 3) Construcción pipeline + certificación
+ORCH->>ING: Dispara ingesta (EventBridge/StepFn)
+ING->>S3B: Carga a Bronze/Raw
+ORCH->>GLUE: Dispara ETL (StepFn)
+GLUE->>S3S: Transforma a Silver/Trusted
+GLUE->>DQ: Ejecuta reglas de calidad
+DQ-->>GLUE: Resultados de calidad
+
+alt Calidad OK
+  GLUE->>S3G: Publica a Gold/Curated
+  GLUE->>CAT: Registra metadata + linaje + owner
+  CAT->>LF: Asociar permisos al dataset
+  S3G->>SRV: Serving (Athena/Redshift)
+  SRV->>PBI: Dataset certificado disponible
+  PBI->>WS: Publicación en workspace por gerencia/área
+  SPTI->>WS: Publicar assets oficiales (diccionario/KPI/glosario)
+  WS->>USERS: Consumo gobernado (certificado)
+else Calidad NO OK
+  DQ->>DS: Incidente de calidad (no certifica)
+  DS->>DO: Se reporta impacto y acciones
+end</pre>
+    </details>
+  </div>
+</section>
+<!-- G2: Remediación de Calidad de Datos -->
+<section class="card">
+  <div class="card-h">
+    <div class="title">
+      <b>G2 – Remediación de Calidad de Datos (Incidente)</b>
+      <small>Tecnología: Glue Data Quality + CloudWatch (alertas) + Step Functions (reproceso) + Catálogo (estado) + Power BI (marcado degradado). Ticketing opcional (Jira/ServiceNow).</small>
+    </div>
+    <div class="actions">
+      <button class="btn" data-copy="m-g2" onclick="copyText('m-g2')">Copiar Mermaid</button>
+      <button class="btn" onclick="openModal('g2')">Ver grande</button>
+    </div>
+  </div>
+
+  <div class="canvas">
+    <div class="mermaid-wrap">
+      <div class="mermaid" data-diagram="g2">
+flowchart LR
+  DET["Detección<br/>CloudWatch Alert / Usuario / Regla DQ"]
+  DQ["Glue Data Quality<br/>(validaciones)"]
+  TRI["Triage<br/>Data Steward"]
+  SEV{"Severidad<br/>S1/S2/S3"}
+  CONT["Contención<br/>- Marcar dataset 'Degradado'<br/>- Pausar publicación certificada"]
+  CAT["Catálogo (Glue Catalog)<br/>Actualizar estado/etiqueta"]
+  TKT["Ticket (Jira/ServiceNow)<br/>Opcional"]
+  RCA["RCA – Causa raíz<br/>Origen vs Pipeline"]
+  FIXO["Corrección en Origen<br/>(SAP/Siesa/Apps)"]
+  FIXP["Corrección en Pipeline<br/>(Glue Job/Mapping)"]
+  ORCH["Step Functions<br/>Reproceso controlado"]
+  GLUE["AWS Glue ETL"]
+  VALID["Re-ejecución DQ<br/>y validación"]
+  CLOSE["Cierre<br/>Lección aprendida + ajuste reglas"]
+
+  DET --> DQ --> TRI --> SEV
+  SEV -->|S1 Alta| CONT --> CAT
+  SEV -->|S2 Media| TRI
+  SEV -->|S3 Baja| TRI
+
+  TRI --> TKT --> RCA
+  TRI --> RCA
+
+  RCA --> FIXO --> ORCH
+  RCA --> FIXP --> ORCH
+
+  ORCH --> GLUE --> VALID
+  VALID -->|OK| CLOSE
+  VALID -->|NO OK| RCA
+      </div>
+    </div>
+
+    <details>
+      <summary>Ver código Mermaid</summary>
+      <pre id="m-g2">flowchart LR
+  DET["Detección<br/>CloudWatch Alert / Usuario / Regla DQ"]
+  DQ["Glue Data Quality<br/>(validaciones)"]
+  TRI["Triage<br/>Data Steward"]
+  SEV{"Severidad<br/>S1/S2/S3"}
+  CONT["Contención<br/>- Marcar dataset 'Degradado'<br/>- Pausar publicación certificada"]
+  CAT["Catálogo (Glue Catalog)<br/>Actualizar estado/etiqueta"]
+  TKT["Ticket (Jira/ServiceNow)<br/>Opcional"]
+  RCA["RCA – Causa raíz<br/>Origen vs Pipeline"]
+  FIXO["Corrección en Origen<br/>(SAP/Siesa/Apps)"]
+  FIXP["Corrección en Pipeline<br/>(Glue Job/Mapping)"]
+  ORCH["Step Functions<br/>Reproceso controlado"]
+  GLUE["AWS Glue ETL"]
+  VALID["Re-ejecución DQ<br/>y validación"]
+  CLOSE["Cierre<br/>Lección aprendida + ajuste reglas"]
+
+  DET --> DQ --> TRI --> SEV
+  SEV -->|S1 Alta| CONT --> CAT
+  SEV -->|S2 Media| TRI
+  SEV -->|S3 Baja| TRI
+
+  TRI --> TKT --> RCA
+  TRI --> RCA
+
+  RCA --> FIXO --> ORCH
+  RCA --> FIXP --> ORCH
+
+  ORCH --> GLUE --> VALID
+  VALID -->|OK| CLOSE
+  VALID -->|NO OK| RCA</pre>
+    </details>
+  </div>
+
+  <!-- G3: Metadatos, Linaje y Gestión de Cambios -->
+<section class="card">
+  <div class="card-h">
+    <div class="title">
+      <b>G3 – Metadatos, Linaje y Gestión de Cambios (Data Change Management)</b>
+      <small>Tecnología: Glue Data Catalog + etiquetas/metadata + versionado (schema evolution) + notificación a consumidores (Power BI / Owners). Orquestación de despliegue vía CI/CD (opcional).</small>
+    </div>
+    <div class="actions">
+      <button class="btn" data-copy="m-g3" onclick="copyText('m-g3')">Copiar Mermaid</button>
+      <button class="btn" onclick="openModal('g3')">Ver grande</button>
+    </div>
+  </div>
+
+  <div class="canvas">
+    <div class="mermaid-wrap">
+      <div class="mermaid" data-diagram="g3">
+sequenceDiagram
+autonumber
+participant DEV as Equipo Técnico (ETL/BI)
+participant CICD as CI/CD (GitHub Actions/CodePipeline) (opcional)
+participant CAT as Glue Data Catalog (metadata/linaje)
+participant DS as Data Steward (control de cambios)
+participant DO as Data Owner (aprobación funcional)
+participant SEC as Seguridad/TI (clasificación/acceso)
+participant CONS as Consumidores (Power BI/Analistas)
+
+DEV->>CAT: Registrar/actualizar asset (tablas, vistas, datasets)
+DEV->>CAT: Proponer cambio (schema, KPI, refresh, particiones)
+opt CI/CD
+  DEV->>CICD: Ejecutar despliegue controlado
+  CICD-->>DEV: Resultado despliegue
+end
+
+CAT->>DS: Detecta cambio / requiere revisión (impacto)
+DS->>DO: Validación funcional (definición y KPI)
+DS->>SEC: Validación de clasificación/permiso (si aplica)
+
+alt Cambio aprobado
+  DO-->>DS: Aprobado
+  SEC-->>DS: OK seguridad
+  DS->>CAT: Publicar versión (v1, v2...) + linaje actualizado
+  CAT->>CONS: Notificar cambio e impacto (breaking/non-breaking)
+else Cambio rechazado
+  DO-->>DS: Rechazado / ajustes
+  DS->>DEV: Solicitar correcciones
+end
+      </div>
+    </div>
+
+    <details>
+      <summary>Ver código Mermaid</summary>
+      <pre id="m-g3">sequenceDiagram
+autonumber
+participant DEV as Equipo Técnico (ETL/BI)
+participant CICD as CI/CD (GitHub Actions/CodePipeline) (opcional)
+participant CAT as Glue Data Catalog (metadata/linaje)
+participant DS as Data Steward (control de cambios)
+participant DO as Data Owner (aprobación funcional)
+participant SEC as Seguridad/TI (clasificación/acceso)
+participant CONS as Consumidores (Power BI/Analistas)
+
+DEV->>CAT: Registrar/actualizar asset (tablas, vistas, datasets)
+DEV->>CAT: Proponer cambio (schema, KPI, refresh, particiones)
+opt CI/CD
+  DEV->>CICD: Ejecutar despliegue controlado
+  CICD-->>DEV: Resultado despliegue
+end
+
+CAT->>DS: Detecta cambio / requiere revisión (impacto)
+DS->>DO: Validación funcional (definición y KPI)
+DS->>SEC: Validación de clasificación/permiso (si aplica)
+
+alt Cambio aprobado
+  DO-->>DS: Aprobado
+  SEC-->>DS: OK seguridad
+  DS->>CAT: Publicar versión (v1, v2...) + linaje actualizado
+  CAT->>CONS: Notificar cambio e impacto (breaking/non-breaking)
+else Cambio rechazado
+  DO-->>DS: Rechazado / ajustes
+  DS->>DEV: Solicitar correcciones
+end</pre>
+    </details>
+  </div>
+</section>
+
+<!-- G4: Solicitud, Aprobación y Auditoría de Accesos -->
+<section class="card">
+  <div class="card-h">
+    <div class="title">
+      <b>G4 – Solicitud, Aprobación y Auditoría de Accesos</b>
+      <small>Tecnología: Lake Formation + IAM (permisos a datos), Power BI (workspace/dataset), CloudTrail (auditoría) y revisiones periódicas de accesos.</small>
+    </div>
+    <div class="actions">
+      <button class="btn" data-copy="m-g4" onclick="copyText('m-g4')">Copiar Mermaid</button>
+      <button class="btn" onclick="openModal('g4')">Ver grande</button>
+    </div>
+  </div>
+
+  <div class="canvas">
+    <div class="mermaid-wrap">
+      <div class="mermaid" data-diagram="g4">
+sequenceDiagram
+autonumber
+participant USER as Usuario (Negocio/Analista)
+participant MGR as Líder / Aprobador Área
+participant DO as Data Owner (Dominio)
+participant DS as Data Steward (Gobierno)
+participant SEC as Seguridad/TI
+participant LF as Lake Formation + IAM
+participant CAT as Glue Catalog (descubrimiento)
+participant PBI as Power BI Service
+participant WS as Workspaces (Gerencias/Áreas)
+participant AUD as Auditoría (CloudTrail/Logs)
+
+USER->>CAT: Descubre dataset (catálogo / glosario)
+USER->>MGR: Solicita acceso (justificación de negocio)
+MGR->>DO: Avala necesidad (dominio)
+DO->>DS: Verifica políticas del dominio (mínimo privilegio)
+DS->>SEC: Solicita evaluación seguridad (clasificación)
+
+alt Aprobado
+  SEC->>LF: Conceder permisos (IAM/LF) a tablas/datasets
+  LF->>PBI: Habilitar acceso a dataset / gateway (si aplica)
+  PBI->>WS: Asignar acceso al workspace correspondiente
+  WS->>USER: Acceso concedido
+else Rechazado
+  SEC->>USER: Rechazo + motivo / alternativa
+end
+
+AUD-->>LF: Auditoría periódica de permisos (CloudTrail)
+AUD-->>PBI: Auditoría de consumo (activity logs)
+AUD-->>DO: Recertificación por dominio (cada periodo)
+      </div>
+    </div>
+
+    <details>
+      <summary>Ver código Mermaid</summary>
+      <pre id="m-g4">sequenceDiagram
+autonumber
+participant USER as Usuario (Negocio/Analista)
+participant MGR as Líder / Aprobador Área
+participant DO as Data Owner (Dominio)
+participant DS as Data Steward (Gobierno)
+participant SEC as Seguridad/TI
+participant LF as Lake Formation + IAM
+participant CAT as Glue Catalog (descubrimiento)
+participant PBI as Power BI Service
+participant WS as Workspaces (Gerencias/Áreas)
+participant AUD as Auditoría (CloudTrail/Logs)
+
+USER->>CAT: Descubre dataset (catálogo / glosario)
+USER->>MGR: Solicita acceso (justificación de negocio)
+MGR->>DO: Avala necesidad (dominio)
+DO->>DS: Verifica políticas del dominio (mínimo privilegio)
+DS->>SEC: Solicita evaluación seguridad (clasificación)
+
+alt Aprobado
+  SEC->>LF: Conceder permisos (IAM/LF) a tablas/datasets
+  LF->>PBI: Habilitar acceso a dataset / gateway (si aplica)
+  PBI->>WS: Asignar acceso al workspace correspondiente
+  WS->>USER: Acceso concedido
+else Rechazado
+  SEC->>USER: Rechazo + motivo / alternativa
+end
+
+AUD-->>LF: Auditoría periódica de permisos (CloudTrail)
+AUD-->>PBI: Auditoría de consumo (activity logs)
+AUD-->>DO: Recertificación por dominio (cada periodo)</pre>
+    </details>
+  </div>
+</section>
+
+</section>
+
+    </div>
+
+    <footer>
+      Tip: Usa “<b>Ver grande</b>” para abrir el diagrama en modal y tomar pantallazo nítido. En Chrome: <b>Ctrl/Cmd + P</b> → Guardar como PDF.
+    </footer>
+  </main>
+
+  <dialog id="modal">
+    <div class="modal-h">
+      <b>Vista grande</b>
+      <button class="btn" onclick="document.getElementById('modal').close()">Cerrar</button>
+    </div>
+    <div class="modal-b" id="modalBody"></div>
+  </dialog>
+</body>
+</html>

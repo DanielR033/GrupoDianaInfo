@@ -1,0 +1,8 @@
+"pct_rows_complete","pct_rows_partial","pct_rows_critical","critical_columns","critical_columns_count","critical_columns_json","dataset_name","execution_date"
+"36.87","63.13","0.0","lifnr,regio,regss,kunnr","4",,"LFA1","2026-03-17"
+"80.2","19.79","0.01","nom1,nom2,nom3,nom4,pob,reg,nit,dir,nit_dv,clase_impto","10","[""nom1"", ""nom2"", ""nom3"", ""nom4"", ""pob"", ""reg"", ""nit"", ""dir"", ""nit_dv"", ""clase_impto""]","proveedor_360","2026-03-13"
+"99.97","0.0","0.03","id_cta_prov,sociedad","2","[""id_cta_prov"", ""sociedad""]","proveedor_por_sociedad","2026-03-13"
+"91.94","7.74","0.32","addrnumber,city1,street,tel_number","4",,"ADRC","2026-03-13"
+"46.16","0.02","53.82","cta,num_ban,clase_impto","3","[""cta"", ""num_ban"", ""clase_impto""]","proveedor_por_datos_bancarios","2026-03-13"
+"0.0","0.16","99.84","nom1,nom2,nom3,nom4,nom_co,pob1,dis2,cod_postal_apdo,calle,calle_2,calle_3,tel","12","[""nom1"", ""nom2"", ""nom3"", ""nom4"", ""nom_co"", ""pob1"", ""dis2"", ""cod_postal_apdo"", ""calle"", ""calle_2"", ""calle_3"", ""tel""]","proveedor_por_direcciones","2026-03-13"
+"36.85","63.14","0.0","lifnr,regio,regss,kunnr","4",,"LFA1","2026-03-13"
