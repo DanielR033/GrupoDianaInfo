@@ -397,6 +397,8 @@ const SPEECH = {
     "Gestión del Cambio fue tratada como frente estratégico, no como apoyo accesorio. Se activaron comunicaciones, formación por roles, comités y seguimiento de mitigaciones para asegurar adopción sostenida. El avance en ADKAR y en la movilización de audiencias confirma que el modelo empieza a instalarse culturalmente, que es la condición para sostener resultados técnicos en el tiempo.",
   cierre:
     "La lectura ejecutiva del cierre es clara: la madurez crece cuando arquitectura, gobierno y cambio avanzan en paralelo. El objetivo no es eliminar completamente los gaps —siempre existirán— sino gestionarlos con disciplina y evidencia. El roadmap propuesto permite llevar la organización a un nivel de madurez superior con métricas concretas y foco en valor de negocio.",
+  continuidad:
+    "La continuidad ya no es un plan abstracto: tiene fecha de arranque, una ventana cerrada de ocho semanas y una agenda concreta por dominios, calidad y gobierno. La decisión correcta ahora es sostener el ritmo y visualizar el avance como una sola ola coordinada, no como tareas aisladas por equipo.",
   cierreFinal:
     "Este cierre consolida un ciclo completo: diagnóstico, diseño, implementación y alistamiento administrativo. Se entrega una base técnica reutilizable, un marco de gobierno activo y un plan de continuidad que protege la inversión realizada. La recomendación es mantener la cadencia de operación y acompañamiento para capturar el retorno esperado en adopción, calidad y velocidad de decisión.",
 };
@@ -496,6 +498,239 @@ const JOURNEY_PROGRESS = [
   { phase: "Fase 3", value: 98.9 },
 ];
 
+const CONTINUIDAD_OVERVIEW = {
+  inicio: "20 Abr 2026",
+  fin: "12 Jun 2026",
+  semanas: 8,
+  dominios: 3,
+  mensaje:
+    "La fase de continuidad toma la arquitectura To-Be ya definida y la convierte en ejecución multi-dominio con foco en Clientes, Agricultores y Proveedores. El frente de ICQ ya arrancó dentro de la arquitectura objetivo y viene acompañado de actividades de calidad para que el índice nazca con trazabilidad y control.",
+  hitos: [
+    "Inicio formal de la continuidad: 20 de abril de 2026.",
+    "Ventana de ejecución de 8 semanas hasta el 12 de junio de 2026.",
+    "Implementación en paralelo de los dominios Clientes, Agricultores y Proveedores.",
+    "ICQ (Índice de Calidad) en implementación dentro de la arquitectura To-Be.",
+    "Actividades de calidad de datos activas alrededor del índice: profiling, reglas y seguimiento.",
+  ],
+  focos: [
+    {
+      title: "Dominios priorizados",
+      detail: "Clientes, Agricultores y Proveedores avanzan como primera ola operativa.",
+    },
+    {
+      title: "ICQ aterrizado a arquitectura",
+      detail: "El índice deja de ser concepto y entra a la lógica técnica del modelo objetivo.",
+    },
+    {
+      title: "Calidad desde el arranque",
+      detail: "Las reglas, métricas y validaciones acompañan la implementación, no llegan al final.",
+    },
+    {
+      title: "Gobierno y delivery juntos",
+      detail: "Accesos, catálogo, roles, productos y pipelines evolucionan con la misma cadencia.",
+    },
+  ],
+  cards: [
+    {
+      label: "Inicio",
+      value: "20 Abr 2026",
+      note: "Kick off y alistamiento técnico",
+      icon: Timer,
+    },
+    {
+      label: "Duración",
+      value: "8 semanas",
+      note: "Cadencia intensiva multi-frente",
+      icon: GitBranch,
+    },
+    {
+      label: "Dominios",
+      value: "3 activos",
+      note: "Clientes, Agricultores y Proveedores",
+      icon: Layers,
+    },
+    {
+      label: "Índice crítico",
+      value: "ICQ",
+      note: "Integrado a To-Be + calidad de datos",
+      icon: ShieldCheck,
+    },
+  ],
+};
+
+const CONTINUIDAD_WEEK_LABELS = [
+  { week: 1, range: "20–24 Abr" },
+  { week: 2, range: "27 Abr–1 May" },
+  { week: 3, range: "4–8 May" },
+  { week: 4, range: "11–15 May" },
+  { week: 5, range: "18–22 May" },
+  { week: 6, range: "25–29 May" },
+  { week: 7, range: "1–5 Jun" },
+  { week: 8, range: "8–12 Jun" },
+];
+
+const CONTINUIDAD_TIMELINE = [
+  {
+    lane: "Agricultores",
+    owner: "Fuentes, maestro, ICQ y publicación inicial",
+    items: [
+      {
+        title: "Kick off, conectividad y diccionarios",
+        detail: "SIIMED / TechAmbits, fuentes, accesos y definiciones base.",
+        start: 1,
+        end: 2,
+        tone: "blue",
+      },
+      {
+        title: "Bronze / Silver + ingestas",
+        detail: "Pipelines, validaciones y datasets de trabajo.",
+        start: 2,
+        end: 4,
+        tone: "amber",
+      },
+      {
+        title: "Gold + ICQ + catálogo",
+        detail: "Producto, índice y gobierno del activo.",
+        start: 4,
+        end: 6,
+        tone: "red",
+      },
+    ],
+  },
+  {
+    lane: "Clientes",
+    owner: "Construcción SAP/SIESA y salida a producto",
+    items: [
+      {
+        title: "Diccionarios, vistas y preparación",
+        detail: "Maestros, ventas, pedidos, cartera y descuentos.",
+        start: 2,
+        end: 4,
+        tone: "slate",
+      },
+      {
+        title: "Ingestas y pipelines",
+        detail: "Bronze, Silver y estandarización para consumo.",
+        start: 4,
+        end: 7,
+        tone: "blue",
+      },
+      {
+        title: "Producto y publicación",
+        detail: "Cierre técnico y salida gobernada.",
+        start: 7,
+        end: 8,
+        tone: "emerald",
+      },
+    ],
+  },
+  {
+    lane: "Proveedores",
+    owner: "Implementación SIIMED/SIESA con enfoque reutilizable",
+    items: [
+      {
+        title: "Fuentes y diccionarios",
+        detail: "Compras, cartera y ventas para el dominio.",
+        start: 5,
+        end: 6,
+        tone: "slate",
+      },
+      {
+        title: "Bronze / Silver / Gold",
+        detail: "Configuración, ingesta y productos del dominio.",
+        start: 6,
+        end: 8,
+        tone: "amber",
+      },
+    ],
+  },
+  {
+    lane: "ICQ y Calidad",
+    owner: "Índice de calidad embebido en la arquitectura objetivo",
+    items: [
+      {
+        title: "Implementación ICQ en To-Be",
+        detail: "Modelo, variables y acople técnico del índice.",
+        start: 1,
+        end: 4,
+        tone: "red",
+      },
+      {
+        title: "Profiling, reglas y seguimiento",
+        detail: "Calidad de datos para sostener el índice con evidencia.",
+        start: 4,
+        end: 8,
+        tone: "emerald",
+      },
+    ],
+  },
+  {
+    lane: "Gobierno y Seguridad",
+    owner: "Accesos, catálogo, roles y comités durante toda la ola",
+    items: [
+      {
+        title: "Accesos, roles y permisos",
+        detail: "Seguridad y gobierno habilitante desde el inicio.",
+        start: 1,
+        end: 5,
+        tone: "slate",
+      },
+      {
+        title: "Catálogo, productos y publicación",
+        detail: "DataZone, responsables y visibilidad de activos.",
+        start: 5,
+        end: 8,
+        tone: "blue",
+      },
+    ],
+  },
+];
+
+const CONTINUIDAD_TEAM = [
+  {
+    name: "José Valdés",
+    role: "Arquitectura y modelado",
+    focus: "Fuentes, diccionarios, vistas SAP, lineamientos To-Be y habilitación técnica de dominios.",
+    accent: "#004B8D",
+  },
+  {
+    name: "Miguel Vargas",
+    role: "Infraestructura y conectividad",
+    focus: "VPN, conectividad AWS/GCP, SIIMED y validaciones de viabilidad técnica.",
+    accent: "#475569",
+  },
+  {
+    name: "Juan Bolívar",
+    role: "Gobierno del dato",
+    focus: "Catálogo, accesos, roles, comités, publicación de productos y gobierno transversal.",
+    accent: "#E1261C",
+  },
+  {
+    name: "John Herrera",
+    role: "Conexiones e ingesta",
+    focus: "Jobs de conexión, cargas a S3, configuración Bronze y movimiento de datos desde fuente.",
+    accent: "#0F766E",
+  },
+  {
+    name: "Edwin Lugo",
+    role: "Pipelines y productos",
+    focus: "Pipelines Silver/Gold, datasets integrados, productos de datos y validación de salida.",
+    accent: "#D97706",
+  },
+  {
+    name: "Javier Florez",
+    role: "Frente Proveedores",
+    focus: "Implementación de proveedores sobre SIIMED/SIESA, configuración y evolución del dominio.",
+    accent: "#0284C7",
+  },
+  {
+    name: "Azurian Equipo TI",
+    role: "Delivery técnico y control",
+    focus: "Validaciones, seguridad, productos, calidad, despliegue y coordinación de ejecución.",
+    accent: "#059669",
+  },
+];
+
 // ==============================
 // Minimal guards (no rompen UI)
 // ==============================
@@ -526,6 +761,14 @@ function prioPill(prio) {
   if (prio === "Alta") return `${base} bg-rose-500/10 border-rose-500/25 text-rose-800`;
   if (prio === "Media") return `${base} bg-amber-500/10 border-amber-500/25 text-amber-800`;
   return `${base} bg-sky-500/10 border-sky-500/25 text-sky-800`;
+}
+
+function continuityToneClass(tone) {
+  if (tone === "red") return "border-rose-300 bg-rose-50 text-rose-950";
+  if (tone === "blue") return "border-sky-300 bg-sky-50 text-sky-950";
+  if (tone === "amber") return "border-amber-300 bg-amber-50 text-amber-950";
+  if (tone === "emerald") return "border-emerald-300 bg-emerald-50 text-emerald-950";
+  return "border-slate-300 bg-slate-50 text-slate-900";
 }
 
 const Card = ({ children, className = "" }) => (
@@ -845,7 +1088,7 @@ function OrgMini() {
 // Component
 // ==============================
 export default function App() {
-  const [mode, setMode] = useState("inicio"); // inicio | fase1 | fase2 | fase3 | calidad | cambio | cierre | cierreFinal
+  const [mode, setMode] = useState("inicio"); // inicio | fase1 | fase2 | fase3 | calidad | cambio | cierre | continuidad | cierreFinal
   const [qualitySelection, setQualitySelection] = useState("");
 
   const status = useMemo(() => {
@@ -1115,6 +1358,14 @@ export default function App() {
                 onClick={() => setMode("cierre")}
               >
                 Próximos pasos y postventa
+              </button>
+              <button
+                className={`rounded-xl border shadow-sm px-3 py-2 text-sm transition ${
+                  mode === "continuidad" ? "bg-slate-900 text-white border-slate-900" : "bg-white opacity-80"
+                }`}
+                onClick={() => setMode("continuidad")}
+              >
+                Continuidad
               </button>
               <button
                 className={`rounded-xl border shadow-sm px-3 py-2 text-sm transition ${
@@ -2112,12 +2363,176 @@ export default function App() {
               </p>
             </Card>
           </div>
+        ) : mode === "continuidad" ? (
+          <div className="mt-6 space-y-6">
+            <Card className="overflow-hidden">
+              <div className="relative overflow-hidden bg-slate-950 px-6 py-6 text-white md:px-8 md:py-8">
+                <div
+                  className="absolute -left-16 top-0 h-40 w-40 rounded-full blur-3xl opacity-40"
+                  style={{ background: brand.primary }}
+                />
+                <div
+                  className="absolute right-0 top-10 h-48 w-48 rounded-full blur-3xl opacity-30"
+                  style={{ background: brand.secondary }}
+                />
+                <div className="relative">
+                  <div className="text-xs uppercase tracking-[0.25em] text-white/60">Fase de continuidad</div>
+                  <h2 className="mt-2 max-w-4xl text-2xl font-extrabold tracking-tight md:text-4xl">
+                    8 semanas para convertir el diseño en ejecución visible por dominios.
+                  </h2>
+                  <p className="mt-4 max-w-4xl text-sm leading-relaxed text-slate-200 md:text-base">
+                    {CONTINUIDAD_OVERVIEW.mensaje}
+                  </p>
+
+                  <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-4">
+                    {CONTINUIDAD_OVERVIEW.cards.map((card) => {
+                      const Icon = card.icon;
+                      return (
+                        <div key={card.label} className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="text-[11px] uppercase tracking-wide text-white/60">{card.label}</div>
+                            <Icon className="h-4 w-4 text-white/80" />
+                          </div>
+                          <div className="mt-2 text-xl font-bold text-white">{card.value}</div>
+                          <div className="mt-1 text-[12px] text-slate-300">{card.note}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-5">
+              <div className="text-xs uppercase tracking-wide text-slate-500">Speech sugerido</div>
+              <p className="mt-2 text-sm leading-relaxed text-slate-700">{SPEECH.continuidad}</p>
+            </Card>
+
+            <Card className="p-5">
+              <SectionHeader
+                n={1}
+                title="Overview de la continuidad"
+                subtitle="Primera lectura ejecutiva del arranque"
+                icon={Sparkles}
+              />
+              <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+                <div className="rounded-2xl border bg-slate-50 p-4">
+                  <div className="text-sm font-semibold text-slate-900">Primeros hitos</div>
+                  <BulletList items={CONTINUIDAD_OVERVIEW.hitos} tone="secondary" />
+                </div>
+                <div className="rounded-2xl border bg-white p-4">
+                  <div className="text-sm font-semibold text-slate-900">Qué hace distinta esta fase</div>
+                  <div className="mt-3 space-y-3">
+                    {CONTINUIDAD_OVERVIEW.focos.map((foco) => (
+                      <div key={foco.title} className="rounded-xl border bg-slate-50 px-3 py-3">
+                        <div className="text-sm font-semibold text-slate-900">{foco.title}</div>
+                        <div className="mt-1 text-[12px] text-slate-600">{foco.detail}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-5">
+              <SectionHeader
+                n={2}
+                title="Timeline de alto nivel"
+                subtitle="Calendario visual de la ola de continuidad del 20 de abril al 12 de junio de 2026"
+                icon={GitBranch}
+              />
+              <div className="mt-5 overflow-x-auto">
+                <div className="min-w-[1120px]">
+                  <div className="grid grid-cols-[220px_repeat(8,minmax(0,1fr))] gap-3">
+                    <div className="rounded-2xl border bg-slate-900 px-4 py-3 text-white">
+                      <div className="text-sm font-semibold">Frente</div>
+                      <div className="mt-1 text-[12px] text-white/70">Responsabilidad y foco</div>
+                    </div>
+                    {CONTINUIDAD_WEEK_LABELS.map((week) => (
+                      <div key={week.week} className="rounded-2xl border bg-slate-50 px-2 py-3 text-center">
+                        <div className="text-[11px] uppercase tracking-wide text-slate-500">Semana {week.week}</div>
+                        <div className="mt-1 text-sm font-semibold text-slate-900">{week.range}</div>
+                      </div>
+                    ))}
+
+                    {CONTINUIDAD_TIMELINE.map((lane) => (
+                      <React.Fragment key={lane.lane}>
+                        <div className="rounded-2xl border bg-white px-4 py-4">
+                          <div className="text-sm font-semibold text-slate-900">{lane.lane}</div>
+                          <div className="mt-1 text-[12px] text-slate-500">{lane.owner}</div>
+                        </div>
+                        <div className="col-span-8 grid grid-cols-8 gap-2">
+                          {CONTINUIDAD_WEEK_LABELS.map((week) => (
+                            <div
+                              key={`${lane.lane}-${week.week}`}
+                              className="min-h-[110px] rounded-2xl border border-dashed border-slate-200 bg-slate-50/70"
+                              style={{ gridRow: 1 }}
+                            />
+                          ))}
+                          {lane.items.map((item) => (
+                            <div
+                              key={`${lane.lane}-${item.title}`}
+                              className={`relative z-10 rounded-2xl border px-3 py-3 shadow-sm ${continuityToneClass(item.tone)}`}
+                              style={{ gridColumn: `${item.start} / ${item.end + 1}`, gridRow: 1 }}
+                            >
+                              <div className="text-[11px] uppercase tracking-wide opacity-70">
+                                S{item.start} {item.end !== item.start ? `- S${item.end}` : ""}
+                              </div>
+                              <div className="mt-1 text-sm font-semibold">{item.title}</div>
+                              <div className="mt-1 text-[12px] leading-relaxed opacity-80">{item.detail}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 rounded-2xl border bg-slate-50 p-4 text-sm text-slate-700">
+                Lectura: la continuidad no es una secuencia lineal; es una ola coordinada donde dominios, ICQ,
+                calidad, seguridad y gobierno avanzan en paralelo con fechas concretas.
+              </div>
+            </Card>
+
+            <Card className="p-5">
+              <SectionHeader
+                n={3}
+                title="Personas que hacen parte del proyecto"
+                subtitle="Equipo visible en el cronograma compartido"
+                icon={Users}
+              />
+              <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {CONTINUIDAD_TEAM.map((person) => (
+                  <div key={person.name} className="rounded-2xl border bg-white p-4 shadow-sm">
+                    <div
+                      className="h-1.5 w-full rounded-full"
+                      style={{ background: `linear-gradient(90deg, ${person.accent}, ${brand.secondary})` }}
+                    />
+                    <div className="mt-4 flex items-start justify-between gap-3">
+                      <div>
+                        <div className="text-base font-semibold text-slate-900">{person.name}</div>
+                        <div className="mt-1 text-[12px] text-slate-500">{person.role}</div>
+                      </div>
+                      <div className="rounded-full border bg-slate-50 px-2 py-1 text-[11px] font-semibold text-slate-700">
+                        Proyecto
+                      </div>
+                    </div>
+                    <p className="mt-3 text-sm leading-relaxed text-slate-700">{person.focus}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 rounded-2xl border bg-amber-50 p-4 text-[12px] text-amber-900">
+                Nota: los nombres y frentes se resumieron a partir del cronograma de continuidad compartido para
+                mostrar claramente quién está habilitando cada frente de trabajo.
+              </div>
+            </Card>
+          </div>
         ) : mode === "cierreFinal" ? (
           <div className="mt-6 space-y-6">
             <Card className="p-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h2 className="text-lg md:text-xl font-semibold tracking-tight">Cierre del Proyecto y Continuidad</h2>
+                  <h2 className="text-lg md:text-xl font-semibold tracking-tight">Cierre del Proyecto</h2>
                   <p className="text-slate-500 text-sm mt-1">
                     Estado final, capacidades instaladas, evolución IMTA y próximos pasos
                   </p>
